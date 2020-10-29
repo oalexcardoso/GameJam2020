@@ -1,11 +1,11 @@
 //Estrutando a classe
-class time{
+class Timer{
   //Definir variaveis
   private long ultimoTempo;
   private int intervalo;
   
   //Parametros a serem passados
-  public time(int intervalo){
+  public Timer(float intervalo){
     ultimoTempo = millis();
     this.intervalo = intervalo;
   }

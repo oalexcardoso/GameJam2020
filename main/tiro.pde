@@ -1,5 +1,5 @@
 //Estrutando a classe
-class tiro{
+class Tiro{
   //Definir variaveis
   float velocidade;
   float posX, posY;
@@ -7,7 +7,7 @@ class tiro{
   float raio;
   
   //Parametros a serem passados
-  public tiro(float posX, float posY, float v, float r){
+  public Tiro(float posX, float posY, float v, float r){
     this.posX=posX;
     this.posY=posY;
     velocidade=v;

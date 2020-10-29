@@ -1,17 +1,17 @@
 //Estrutando a classe
-class chefao extends personagem{
+class Chefao extends Personagem{
   //Definir variaveis
   float dx,dy;
   int vida;
-  time t;
+  Timer t;
   
   //Parametros a serem passados
-  public chefao(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tBai, int lar, int alt){
+  public Chefao(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tBai, int lar, int alt){
     //Quando definir vai funcionar sem erro
     super(img, posX, posY, tEsq, tDir, tCim, tBai, lar, alt);
     decideMovimento();
     vida=30;
-    t = new time(500);
+    t = new Timer(500);
   }
   
   //Retirar vida apos tomar tiro

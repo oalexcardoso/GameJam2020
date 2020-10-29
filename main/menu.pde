@@ -1,5 +1,5 @@
 //Estrutando a classe
-class menu{
+class Menu{
   //Orientação
   int x, y;
   //Conteudo do texto
@@ -10,7 +10,7 @@ class menu{
   boolean pressionado;
   
   //Parametros a serem passados
-  public menu(int x, int y, int lar, int alt, String texto){
+  public Menu(int x, int y, int lar, int alt, String texto){
     //Definir variaves
     this.x=x;
     this.y=y;

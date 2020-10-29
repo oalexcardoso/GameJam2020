@@ -1,5 +1,5 @@
 //Estrutando a classe
-class personagem{
+class Personagem{
   //Posição do personagem na tela
   public PVector pos;
   //Numero do quadro sendo exibido
@@ -9,41 +9,42 @@ class personagem{
   //Velocidade do personagem
   private float vel;
   //Teclas para controlar
-  private char tEsq, tDir, tCim;
+  private char tEsq, tDir, tCim, tSpace;
   //Largura e Altura de um sprite (64x64)
   protected int lar, alt; 
-  protected time tAnimacao;
-  ArrayList<tiro> tiros;
-  time tTiro;
+  protected Timer tAnimacao;
+  ArrayList<Tiro> tiros;
+  Timer tTiro;
   int cadenciaTiro;
   int pontuacao;
   
   //Parametros a serem usados
-  public personagem(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, int lar, int alt){
+  public Personagem(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tSpace, int lar, int alt){
     this.lar=lar;
     this.alt=alt;
     this.tEsq=tEsq;
     this.tDir=tDir;
     this.tCim=tCim;
+    this.tSpace=tSpace;
     pos = new PVector(posX, posY);
     sprites = img;
     //Exibir quadro inicial
     quadro=7;
     //Setar velocidade do jogador
     vel=3.5;
-    tAnimacao = new time(1000/6);
-    tiros=new ArrayList<tiro>();
+    tAnimacao = new Timer(1000/6);
+    tiros=new ArrayList<Tiro>();
     cadenciaTiro=450;
-    tTiro = new time(cadenciaTiro);
+    tTiro = new Timer(cadenciaTiro);
   }
   
   public void atira(){
     if(tTiro.disparou())
-      tiros.add(new tiro(getCenterX(),getCenterY(),12,3));
+      tiros.add(new Tiro(getCenterX(),getCenterY(),12,3));
   }
   
   public void desenhe() {
-    for(tiro t: tiros){
+    for(Tiro t: tiros){
       t.movimente();
       t.desenha();
     }
@@ -68,6 +69,10 @@ class personagem{
           quadro=2;
       }
       else if(teclas[tDir]){
+        if(quadro<6||quadro>7)
+          quadro=6;
+      }
+      else if(teclas[tSpace]){
         if(quadro<6||quadro>7)
           quadro=6;
       }

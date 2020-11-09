@@ -40,23 +40,8 @@ class Menu{
     
   //Desenhar botoes
   void desenhe(){
-    //Analisar estado do botao
-    if(pressionado){
       //Preenchimento do botao
-      fill(255,255,0);
-    }
-    else{
-      //Preencimento do botao
-      fill(255);
-      //Desenhar retangulo
-      rect(x,y,lar,alt);
-      //Preencimento do botao
-      fill(0);
-      //Alinhamento do botao
-      textAlign(CENTER,CENTER);
-      //Texto dentro do botao
-      text(texto,x,y,lar,alt);
-    }
+      fill(255,0,0,255);
   }
   
 }

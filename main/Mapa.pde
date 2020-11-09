@@ -8,6 +8,9 @@ class Mapa{
   byte[] b;
   byte[][] layer;
   
+  //Variavel de varredura de colisao
+  public int posY, posX;
+  
   //Parametros a serem passados
   public Mapa(int l, int a, String nomeArquivo, int tLar, int tAlt, PImage tImage){
     lar=l;
@@ -21,8 +24,30 @@ class Mapa{
     
     for(int i=0;i<b.length;i++){
       layer[i/lar][i%lar]=b[i];
-    }    
-  }
+    }
+    
+    //Faz a varredura no eixo Y até que encontre uma camada de colisao    
+    int i;
+    
+    for(i=0;i<alt;i++){
+        if(layer[i][0]!=-1){
+            posY=i*64;
+            break;
+        }
+     }
+    
+    //Faz a varredura do eixo X até que encontre o final do eixo de colisao
+      for(int j=0;j<lar;j++){        
+        if(layer[(posY/64)][j]!=1){
+            posX=j*64;
+            break;
+        }
+      }
+      
+      print("\nposX: ", posX);
+      print("\nposY: ", posY);
+      
+  } 
   
   //Varrer a matriz do mapa e desenhar
   public void desenhe(){

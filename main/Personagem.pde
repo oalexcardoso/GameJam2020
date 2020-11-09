@@ -1,7 +1,9 @@
 //Estrutando a classe
 class Personagem{
-  //Posição do personagem na tela
   public PVector pos;
+  //Posição do personagem na tela
+  //public float pos.x;
+  //public float pos.y;
   //Numero do quadro sendo exibido
   protected int quadro;
   //Referência pra imagem do personagem
@@ -16,7 +18,18 @@ class Personagem{
   ArrayList<Tiro> tiros;
   Timer tTiro;
   int cadenciaTiro;
-  int pontuacao;
+  public int pontuacao;
+  
+  Tiro tiro;
+  
+  float g;
+  float velYMax;
+  float dy;
+  
+  float controle;
+  float controleAcao;
+  
+  int pulando;
   
   //Parametros a serem usados
   public Personagem(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tSpace, int lar, int alt){
@@ -26,21 +39,68 @@ class Personagem{
     this.tDir=tDir;
     this.tCim=tCim;
     this.tSpace=tSpace;
-    pos = new PVector(posX, posY);
     sprites = img;
+    
+    pos = new PVector(posX, posY);
+    
     //Exibir quadro inicial
-    quadro=7;
+    quadro=3;
     //Setar velocidade do jogador
-    vel=3.5;
+    vel=4;
     tAnimacao = new Timer(1000/6);
     tiros=new ArrayList<Tiro>();
-    cadenciaTiro=450;
+    cadenciaTiro=500;
     tTiro = new Timer(cadenciaTiro);
+    controleAcao=0;
+    pulando=0;
+    
+    setarValores();
+    
+  }
+  
+  public void setarValores(){
+    //Depois de pular, ficar pronto para novo salto
+    g = 1.2;
+    velYMax = 56;
+    dy = -28;  
+  
   }
   
   public void atira(){
     if(tTiro.disparou())
       tiros.add(new Tiro(getCenterX(),getCenterY(),12,3));
+  }
+  
+  public void anime(){
+    if(teclas[tCim]){
+    if(quadro<0||quadro>1)
+      quadro=0;
+  }
+  else if(teclas[tEsq]){
+    if(quadro<2||quadro>3)
+      quadro=2;
+  }
+  else if(teclas[tDir]){
+    if(quadro<0||quadro>1)
+      quadro=0;
+  }
+  quadro++;
+  if(quadro%2==0)quadro=quadro-2;
+     
+  }
+  
+  public void animeInimigo(){
+    if(teclas[tCim]){
+        quadro=4;
+    }
+    
+    if(teclas[tEsq]){
+        quadro=2;
+    }
+   
+    if(teclas[tDir]){
+        quadro=6;
+    }
   }
   
   public void desenhe() {
@@ -49,64 +109,118 @@ class Personagem{
       t.desenha();
     }
     
-    //Atulizando posiçoes
     int px=(quadro%2)*lar;
     int py=(quadro/2)*alt;
     image(sprites.get(px,py,lar,alt),pos.x,pos.y);
     
   }
   
-  //Definir quadro para a movimentação do personagem
-  public void anime() {
-    if(tAnimacao.disparou()){
-      
-      if(teclas[tCim]){
-        if(quadro<4||quadro>5)
-          quadro=4;
-      }
-      else if(teclas[tEsq]){
-        if(quadro<2||quadro>3)
-          quadro=2;
-      }
-      else if(teclas[tDir]){
-        if(quadro<6||quadro>7)
-          quadro=6;
-      }
-      else if(teclas[tSpace]){
-        if(quadro<6||quadro>7)
-          quadro=6;
-      }
-      
-      quadro++;
-      
-      if(quadro%2==0)
-        quadro=quadro-2;
-    }
-  }
-  
-  //Analide da movimentação do personagem na tela
+  //Analise da movimentação do personagem na tela
   public void movimente(Mapa layer){
+    
+    print("\n", verifica);
+    
     if(teclas[tCim]){
-      pos.y-=vel;
       
-      if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x+lar,(int)pos.y)){
-        pos.y=pos.y+(layer.getTileAlt()-pos.y%layer.getTileAlt());
-      }
+      verifica=1;      
+      
+      if(verifica==1){
+      
+        pos.y=pos.y+dy;
+        pulando=1;
+        
+          if(dy<velYMax){              
+            dy=dy+g;
+            pulando=1;           
+          }
+          else{ 
+            dy=velYMax;
+            pulando=1;
+          }
+        
+          //Colisao com o teto e plataforma por baixo
+          if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x+lar,(int)pos.y)){
+            pos.y=pos.y+(layer.getTileAlt()-pos.y%layer.getTileAlt());
+            
+            pulando=0;
+            
+            verifica=2;
+          }
+          
+          //Colisao com o chao ou plataforma por cima
+          if(layer.colidiu((int)pos.x,(int)pos.y+alt,(int)pos.x+lar,(int)pos.y+alt)){
+            pos.y=pos.y-(pos.y%layer.getTileAlt());
+            
+            pulando=0;
+                        
+            verifica=2;
+          }
+        }
     }
-    
+   
     if(teclas[tEsq]){
-      pos.x=pos.x-vel;
       
-      if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x,(int)pos.y+alt)){
-        pos.x=pos.x+(layer.getTileLar()-pos.x%layer.getTileLar());
+      if(pulando==1){
+        pos.x=pos.x-vel;
+      }else{  
+        pos.x=pos.x-vel;
+        
+          if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x,(int)pos.y+alt)){
+            pos.x=pos.x+(layer.getTileLar()-pos.x%layer.getTileLar());
+          }
+          
+          if((layer.colidiu((int)pos.x,(int)pos.y+alt,(int)pos.x+lar,(int)pos.y+alt))){
+            print("Acabou");          
+          }
+          
+          verifica=1;
+            
+            controle=25;
+          
+            pos.y=(pos.y)+(controle);
+            
+              if((controle)<velYMax){
+                  controle=(controle)+g;            
+              }
+              else{ 
+                controle=velYMax;
+              }
+              
+              //Colisao com o chao ou plataforma por cima
+              if(layer.colidiu((int)pos.x,(int)pos.y+alt,(int)pos.x+lar,(int)pos.y+alt)){
+                pos.y=pos.y-(pos.y%layer.getTileAlt());
+                verifica=2;
+              } 
       }
     }
     
-    if(teclas[tDir]){    
-      pos.x=pos.x+vel;
-      
-      if(layer.colidiu((int)pos.x+lar,(int)pos.y,(int)pos.x+lar,(int)pos.y+alt)){
-        pos.x=pos.x-pos.x%layer.getTileLar();
+    if(teclas[tDir]){   
+      if(pulando==1){
+        pos.x=pos.x+vel;
+      }else{  
+        pos.x=pos.x+vel;
+          if(layer.colidiu((int)pos.x+lar,(int)pos.y,(int)pos.x+lar,(int)pos.y+alt)){
+            pos.x=pos.x-pos.x%layer.getTileLar();
+          }
+          verifica=1;
+            
+              controle=25;
+            
+              pos.y=(pos.y)+(controle);
+              
+                if((controle)<velYMax){
+                    controle=(controle)+g;            
+                }
+                else{ 
+                  controle=velYMax;
+                }
+                
+                //Colisao com o chao ou plataforma por cima
+                if(layer.colidiu((int)pos.x,(int)pos.y+alt,(int)pos.x+lar,(int)pos.y+alt)){
+                  pos.y=pos.y-(pos.y%layer.getTileAlt());
+                  
+                  verifica=2;
+                }
       }
     }
   }
@@ -117,6 +231,18 @@ class Personagem{
 
   public float getCenterY(){
     return pos.y+alt/2;
+  }
+  
+  public float getRadius(){
+    return lar/2; //podemos usar um atributo raio como parametro
+  }
+  
+  public boolean verificaColisao(Personagem p){
+    return ((getCenterX()-p.getCenterX())*(getCenterX()-p.getCenterX())+(getCenterY()-p.getCenterY())*(getCenterY()-p.getCenterY()))<((getRadius()+p.getRadius())*(getRadius()+p.getRadius()));
+  }
+
+  public boolean verificaColisaoTiro(Tiro tiro){
+    return (sq(getCenterX()-tiro.posX)+sq(getCenterY()-tiro.posY)<(sq(getRadius()+tiro.raio)));
   }
   
 }

@@ -2,13 +2,14 @@
 class Chefao extends Personagem{
   //Definir variaveis
   float dx,dy;
+  PVector desl;
   int vida;
   Timer t;
   
   //Parametros a serem passados
-  public Chefao(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tBai, int lar, int alt){
+  public Chefao(PImage img, float posX, float posY, char tEsq, char tDir, char tCim, char tPula, int lar, int alt){
     //Quando definir vai funcionar sem erro
-    super(img, posX, posY, tEsq, tDir, tCim, tBai, lar, alt);
+    super(img, posX, posY, tEsq, tDir, tCim, tPula, lar, alt);
     decideMovimento();
     vida=30;
     t = new Timer(500);
@@ -84,24 +85,24 @@ class Chefao extends Personagem{
     {
       decideMovimento();
     }
-    pos.x=pos.x+dx;
-    if(dx>0){
-      if(layer.colidiu((int)pos.x+lar,(int)pos.y,(int)pos.x+lar,(int)pos.y+alt))
-      pos.x=pos.x-dx;
+    pos.y=pos.y+desl.x;
+    if(desl.x>0){
+      if(layer.colidiu((int)pos.y+lar,(int)pos.x,(int)pos.y+lar,(int)pos.x+alt))
+      pos.y=pos.y-desl.x;
     }
-    else if(dx<0){
-      if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x,(int)pos.y+alt))
-      pos.x=pos.x-dx;
+    else if(desl.x<0){
+      if(layer.colidiu((int)pos.y,(int)pos.x,(int)pos.y,(int)pos.x+alt))
+      pos.y=pos.y-desl.x;
     }
 
-    pos.y=pos.y+dy;
+    pos.x=pos.x+dy;
     if(dy>0){
-      if(layer.colidiu((int)pos.x,(int)pos.y+alt,(int)pos.x+lar,(int)pos.y+alt))
-      pos.y=pos.y-dy;
+      if(layer.colidiu((int)pos.y,(int)pos.x+alt,(int)pos.y+lar,(int)pos.x+alt))
+      pos.x=pos.x-dy;
     }
     else if(dy<0){
-      if(layer.colidiu((int)pos.x,(int)pos.y,(int)pos.x+lar,(int)pos.y))
-      pos.y=pos.y-dy;
+      if(layer.colidiu((int)pos.y,(int)pos.x,(int)pos.y+lar,(int)pos.x))
+      pos.x=pos.x-dy;
     }
   }
   

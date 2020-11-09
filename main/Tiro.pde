@@ -4,7 +4,7 @@ class Tiro{
   float velocidade;
   float posX, posY;
   float dx,dy;
-  float raio;
+  public float raio;
   
   //Parametros a serem passados
   public Tiro(float posX, float posY, float v, float r){
@@ -13,7 +13,11 @@ class Tiro{
     velocidade=v;
     raio=r;
     
-    //Ver para que lado o personagem esta virado e lançar tiro reto
+    dx=mouseX-posX;
+    dy=mouseY-posY;
+    float dist = sqrt(sq(mouseX-posX)+sq(mouseY-posY));
+    dx=dx/dist*velocidade;
+    dy=dy/dist*velocidade;
   }
   
   //Deslocamento da bala
@@ -24,7 +28,8 @@ class Tiro{
   
   //Desenhar o tiro na tela
   public void desenha(){
+    fill(255,204,0);
+    stroke(255,204,0);
     ellipse(posX,posY,raio*2,raio*2);
   }
-  
 }
